@@ -10,6 +10,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -300,17 +301,21 @@ public class ImageResizer {
             sourceImage.recycle();
         }
 
+//        Toast.makeText(context, "Rotating Image...", Toast.LENGTH_SHORT).show();
+
+        return rotatedImage;
+
         // Scale image
-        Bitmap scaledImage = ImageResizer.resizeImage(rotatedImage, newWidth, newHeight);
-
-        if(scaledImage == null){
-            throw new IOException("Unable to resize image. Most likely due to not enough memory.");
-        }
-
-        if (scaledImage != rotatedImage) {
-            rotatedImage.recycle();
-        }
-
-        return scaledImage;
+//        Bitmap scaledImage = ImageResizer.resizeImage(rotatedImage, newWidth, newHeight);
+//
+//        if(scaledImage == null){
+//            throw new IOException("Unable to resize image. Most likely due to not enough memory.");
+//        }
+//
+//        if (scaledImage != rotatedImage) {
+//            rotatedImage.recycle();
+//        }
+//
+//        return scaledImage;
     }
 }

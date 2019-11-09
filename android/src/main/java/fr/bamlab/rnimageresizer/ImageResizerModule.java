@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Base64;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
@@ -13,6 +14,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.GuardedAsyncTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -68,21 +70,27 @@ public class ImageResizerModule extends ReactContextBaseJavaModule {
           throw new IOException("The image failed to be resized; invalid Bitmap result.");
         }
 
-        // Save the resulting image
-        File path = context.getCacheDir();
-        if (outputPath != null) {
-            path = new File(outputPath);
-        }
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        scaledImage.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-        File resizedImage = ImageResizer.saveImage(scaledImage, path, Long.toString(new Date().getTime()), compressFormat, quality);
+
+//         Save the resulting image
+//        File path = context.getCacheDir();
+//        if (outputPath != null) {
+//            path = new File(outputPath);
+//        }
+
+//        File resizedImage = ImageResizer.saveImage(scaledImage, path, Long.toString(new Date().getTime()), compressFormat, quality);
 
         // If resizedImagePath is empty and this wasn't caught earlier, throw.
-        if (resizedImage.isFile()) {
+        if (scaledImage != null) {
             WritableMap response = Arguments.createMap();
-            response.putString("path", resizedImage.getAbsolutePath());
-            response.putString("uri", Uri.fromFile(resizedImage).toString());
-            response.putString("name", resizedImage.getName());
-            response.putDouble("size", resizedImage.length());
+//            response.putString("path", resizedImage.getAbsolutePath());
+//            response.putString("uri", Uri.fromFile(resizedImage).toString());
+//            response.putString("name", resizedImage.getName());
+//            response.putDouble("size", resizedImage.length());
+            response.putString("base64", Base64.encodeToString(byteArray, Base64.DEFAULT));
             response.putDouble("width", scaledImage.getWidth());
             response.putDouble("height", scaledImage.getHeight());
             // Invoke success
